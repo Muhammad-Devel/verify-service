@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Verify Service Admin</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg-gradient"></div>
+    <div class="bg-shapes">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
+    <main class="page">
+      <header class="header">
+        <div class="logo">Verify Admin</div>
+        <div class="tag">Project creation dashboard</div>
+      </header>
+
+      <section class="card">
+        <h1>Yangi project qo'shish</h1>
+        <p class="muted">
+          Bu sahifa faqat admin uchun. `ADMIN_API_KEY` ni kiriting, so'ng project yarating.
+        </p>
+
+        <div class="form">
+          <label class="label">Admin API key</label>
+          <input id="adminKey" class="input" placeholder="x-admin-key" type="password" />
+
+          <label class="label">Project nomi</label>
+          <input id="projectName" class="input" placeholder="Masalan: My Project" />
+
+          <button id="createBtn" class="btn">Create Project</button>
+          <div id="createStatus" class="status"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Projectlar ro'yxati</h2>
+          <button id="refreshBtn" class="btn btn-ghost">Refresh</button>
+        </div>
+
+        <div id="listStatus" class="status"></div>
+        <div id="projects" class="projects"></div>
+      </section>
+
+      <footer class="footer">
+        `/admin` sahifasi backend bilan birga ishlaydi. `x-admin-key` shart.
+      </footer>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
