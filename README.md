@@ -89,6 +89,18 @@ https://t.me/<bot_username>?start=<project_code>
 {"phone":"+998901234567"}
 ```
 
+### Check Phone Exists
+`POST /auth/check`
+- header: `x-project-key: <project_key>`
+- body:
+```json
+{"phone":"+998901234567"}
+```
+- response:
+```json
+{"check":true}
+```
+
 ### Verify Code
 `POST /auth/verify`
 - header: `x-project-key: <project_key>`

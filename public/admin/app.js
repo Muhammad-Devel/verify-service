@@ -1,10 +1,16 @@
 const adminKeyInput = document.getElementById('adminKey');
 const projectNameInput = document.getElementById('projectName');
+const selectedProjectEl = document.getElementById('selectedProject');
+const botUsernameInput = document.getElementById('botUsername');
+const buttonCodeEl = document.getElementById('buttonCode');
+const copyButtonCodeBtn = document.getElementById('copyButtonCode');
+const buttonStatus = document.getElementById('buttonStatus');
 const createBtn = document.getElementById('createBtn');
 const refreshBtn = document.getElementById('refreshBtn');
 const createStatus = document.getElementById('createStatus');
 const listStatus = document.getElementById('listStatus');
 const projectsEl = document.getElementById('projects');
+const KEY_MASK = '************';
 
 function getAdminKey() {
   return adminKeyInput.value.trim();
@@ -17,18 +23,21 @@ function setStatus(el, message, isError = false) {
 
 function renderProjects(projects) {
   if (!projects.length) {
-    projectsEl.innerHTML = '<div class="meta">Hozircha project yo‘q.</div>';
+    projectsEl.innerHTML = "<div class=\"meta\">Hozircha project yo'q.</div>";
+    selectedProjectEl.textContent = 'Hech biri tanlanmagan';
+    selectedProjectEl.setAttribute('data-code', '');
+    updateButtonCard();
     return;
   }
 
   projectsEl.innerHTML = projects
     .map(
       (p) => `
-      <div class="project">
+      <div class="project" data-name="${p.name}" data-code="${p.code}">
         <strong>${p.name}</strong>
         <div class="meta">Code: ${p.code}</div>
         <div class="meta">
-          Key: <span class="key-mask" data-key="${p.key}">••••••••••••</span>
+          Key: <span class="key-mask" data-key="${p.key}">${KEY_MASK}</span>
           <button class="toggle-key" data-key="${p.key}" type="button">Show</button>
           <button class="copy-key" data-key="${p.key}" type="button">Copy</button>
         </div>
@@ -37,6 +46,36 @@ function renderProjects(projects) {
     `
     )
     .join('');
+}
+
+function getBotUsername() {
+  return (botUsernameInput.value || '').trim().replace(/^@/, '');
+}
+
+function buildButtonCode() {
+  const projectCode = selectedProjectEl.getAttribute('data-code') || '';
+  const botUsername = getBotUsername();
+  if (!projectCode) return 'Project tanlang';
+  if (!botUsername) return 'Bot username kiriting';
+  const url = `https://t.me/${botUsername}?start=${projectCode}`;
+  return `<a href="${url}" target="_blank" rel="noopener">Start Verification</a>`;
+}
+
+function updateButtonCard() {
+  const code = buildButtonCode();
+  buttonCodeEl.textContent = code;
+}
+
+function selectProject(el) {
+  const name = el.getAttribute('data-name') || '';
+  const code = el.getAttribute('data-code') || '';
+  selectedProjectEl.textContent = name ? `${name} (${code})` : 'Hech biri tanlanmagan';
+  selectedProjectEl.setAttribute('data-code', code);
+
+  const prev = projectsEl.querySelector('.project.selected');
+  if (prev) prev.classList.remove('selected');
+  el.classList.add('selected');
+  updateButtonCard();
 }
 
 async function createProject() {
@@ -117,8 +156,8 @@ projectsEl.addEventListener('click', async (event) => {
     const mask = toggleBtn.parentElement?.querySelector('.key-mask');
     if (!mask) return;
 
-    const isHidden = mask.textContent.includes('•');
-    mask.textContent = isHidden ? key : '••••••••••••';
+    const isHidden = mask.textContent.includes('*');
+    mask.textContent = isHidden ? key : KEY_MASK;
     toggleBtn.textContent = isHidden ? 'Hide' : 'Show';
     return;
   }
@@ -139,5 +178,26 @@ projectsEl.addEventListener('click', async (event) => {
         copyBtn.textContent = 'Copy';
       }, 1200);
     }
+    return;
+  }
+
+  const projectEl = event.target.closest('.project');
+  if (projectEl) {
+    selectProject(projectEl);
+  }
+});
+
+botUsernameInput.addEventListener('input', () => updateButtonCard());
+copyButtonCodeBtn.addEventListener('click', async () => {
+  const code = buttonCodeEl.textContent || '';
+  if (!code || code === 'Project tanlang' || code === 'Bot username kiriting') {
+    setStatus(buttonStatus, 'Project va bot username kiriting.', true);
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(code);
+    setStatus(buttonStatus, 'Nusxalandi.');
+  } catch (err) {
+    setStatus(buttonStatus, 'Nusxalashda xatolik.', true);
   }
 });

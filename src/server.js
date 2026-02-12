@@ -413,6 +413,16 @@ app.post('/auth/request', requireProject, async (req, res) => {
   res.json({ status: 'sent' });
 });
 
+// Check if phone is linked to project
+app.post('/auth/check', requireProject, async (req, res) => {
+  const phoneRaw = req.body?.phone;
+  if (!phoneRaw) return res.status(400).json({ error: 'phone required' });
+
+  const phone = normalizePhone(phoneRaw);
+  const exists = await User.exists({ projectId: req.project._id, phone });
+  res.json({ check: Boolean(exists) });
+});
+
 // Verify code
 app.post('/auth/verify', requireProject, async (req, res) => {
   const phoneRaw = req.body?.phone;

@@ -102,6 +102,16 @@ body {
   margin-bottom: 24px;
 }
 
+.card-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 24px;
+}
+
+.card-grid .card {
+  margin-bottom: 0;
+}
+
 .card h1,
 .card h2 {
   margin: 0 0 8px;
@@ -181,11 +191,32 @@ body {
   border-radius: 14px;
   padding: 14px;
   background: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+}
+
+.project.selected {
+  border-color: var(--accent-2);
+  box-shadow: 0 10px 24px rgba(44, 122, 123, 0.15);
 }
 
 .project strong {
   display: block;
   font-size: 16px;
+}
+
+.button-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.button-code {
+  display: inline-block;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(17, 18, 18, 0.06);
+  font-size: 13px;
 }
 
 .toggle-key {
@@ -206,6 +237,7 @@ body {
   cursor: pointer;
 }
 
+
 .meta {
   font-size: 13px;
   color: var(--muted);
@@ -225,5 +257,13 @@ body {
   }
   .tag {
     letter-spacing: 0.12em;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-grid .card {
+    margin-bottom: 24px;
   }
 }

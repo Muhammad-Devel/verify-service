@@ -38,15 +38,41 @@
         </div>
       </section>
 
-      <section class="card">
-        <div class="card-head">
-          <h2>Projectlar ro'yxati</h2>
-          <button id="refreshBtn" class="btn btn-ghost">Refresh</button>
-        </div>
+      <div class="card-grid">
+        <section class="card">
+          <div class="card-head">
+            <h2>Projectlar ro'yxati</h2>
+            <button id="refreshBtn" class="btn btn-ghost">Refresh</button>
+          </div>
 
-        <div id="listStatus" class="status"></div>
-        <div id="projects" class="projects"></div>
-      </section>
+          <div id="listStatus" class="status"></div>
+          <div id="projects" class="projects"></div>
+        </section>
+
+        <section class="card">
+          <div class="card-head">
+            <h2>Button Code</h2>
+          </div>
+          <p class="muted">
+            Project ustiga bosing. Bot username kiriting va button codni nusxalab oling.
+          </p>
+
+          <div class="form">
+            <label class="label">Tanlangan project</label>
+            <div id="selectedProject" class="input" data-code="">Hech biri tanlanmagan</div>
+
+            <label class="label">Bot username</label>
+            <input id="botUsername" class="input" placeholder="Masalan: my_verify_bot" />
+
+            <label class="label">Button code</label>
+            <div class="button-row">
+              <code id="buttonCode" class="button-code">Project tanlang</code>
+              <button id="copyButtonCode" class="btn btn-ghost" type="button">Copy</button>
+            </div>
+            <div id="buttonStatus" class="status"></div>
+          </div>
+        </section>
+      </div>
 
       <footer class="footer">
         `/admin` sahifasi backend bilan birga ishlaydi. `x-admin-key` shart.
