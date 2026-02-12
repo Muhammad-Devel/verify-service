@@ -386,11 +386,6 @@ app.get('/projects', requireAdmin, async (req, res) => {
   res.json({ projects });
 });
 
-// Check a user
-app.use('/auth/check/', (req, res) =>{
-return res.json({check: ok})
-});
-
 // Request a new code
 app.post('/auth/request', requireProject, async (req, res) => {
   const phoneRaw = req.body?.phone;
