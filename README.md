@@ -123,6 +123,86 @@ https://t.me/<bot_username>?start=<project_code>
   - `POST /auth/request`
   - `POST /auth/verify`
 
+## Login Page Example
+Simple example for a login page that uses `/auth/request` and `/auth/verify`.
+
+```html
+<!-- Button code (deep link) -->
+<a href="https://t.me/<bot_username>?start=<project_code>" target="_blank" rel="noopener">
+  Start Verification
+</a>
+
+<form id="loginForm">
+  <input id="phone" placeholder="+998901234567" />
+  <button type="button" id="sendCode">Send Code</button>
+  <input id="code" placeholder="123456" />
+  <button type="submit">Verify</button>
+</form>
+
+<script>
+  const projectKey = "YOUR_PROJECT_KEY";
+
+  document.getElementById('sendCode').addEventListener('click', async () => {
+    const phone = document.getElementById('phone').value.trim();
+    await fetch('/auth/request', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-project-key': projectKey
+      },
+      body: JSON.stringify({ phone })
+    });
+  });
+
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const phone = document.getElementById('phone').value.trim();
+    const code = document.getElementById('code').value.trim();
+    const res = await fetch('/auth/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-project-key': projectKey
+      },
+      body: JSON.stringify({ phone, code })
+    });
+    const data = await res.json();
+    alert(JSON.stringify(data));
+  });
+</script>
+```
+
+## End‑to‑End Usage Example
+This example shows the full flow from project creation to user verification.
+
+1. Create a project (Admin API):
+```bash
+curl -X POST http://localhost:3000/projects \
+  -H "x-admin-key: ADMIN_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{\"name\":\"Acme\"}"
+```
+
+2. User links phone in Telegram:
+- User opens the bot: `/start <project_code>`
+- User shares contact
+
+3. Request a verification code:
+```bash
+curl -X POST http://localhost:3000/auth/request \
+  -H "x-project-key: PROJECT_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{\"phone\":\"+998901234567\"}"
+```
+
+4. Verify code:
+```bash
+curl -X POST http://localhost:3000/auth/verify \
+  -H "x-project-key: PROJECT_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{\"phone\":\"+998901234567\",\"code\":\"123456\"}"
+```
+
 ## Notes
 - Telegram polling requires outbound access to `api.telegram.org`.
 - If MongoDB has legacy indexes, start once and allow the server to clean them up.
